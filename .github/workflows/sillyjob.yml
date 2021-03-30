@@ -25,4 +25,4 @@ jobs:
       - name: Run the silly script
         run: python sillyscript.py
         env:
-          RANDOM_VAR: 
+          RANDOM_VAR: ${{ secrets.RANDOM_VAR }}
