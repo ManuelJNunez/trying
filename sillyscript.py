@@ -1,5 +1,7 @@
 import os
 
+print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
 var = os.getenv('RANDOM_VAR')
 
 if var:
