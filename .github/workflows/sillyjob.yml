@@ -1,0 +1,28 @@
+name: Silly workflow
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Examples build
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Run the silly script
+        run: python sillyscript.py
+        env:
+          RANDOM_VAR: 
