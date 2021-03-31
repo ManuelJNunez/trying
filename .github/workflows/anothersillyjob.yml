@@ -40,7 +40,9 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip
         if: ${{ github.event_name == 'workflow_run' }}
-
+      - run: actions/checkout@v2
+      - name: List files
+        run: ls -la
       - name: 'Comment on PR'
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/github-script@v3
