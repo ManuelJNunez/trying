@@ -58,7 +58,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue_number,
-              body: `The compilation is starting. Take a look [here](https://github.com/ManuelJNunez/trying/actions/runs${context.runId}).`
+              body: `The compilation is starting. Take a look [here](https://github.com/ManuelJNunez/trying/actions/runs/${context.runId}).`
             });
       - uses: actions/checkout@v2
         if: ${{ github.event_name == 'push' }}
