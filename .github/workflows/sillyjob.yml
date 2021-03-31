@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir -p ./pr
           echo ${{ github.event.number }} > ./pr/NR
-          cp -a !(pr) pr/
+          cp -a sillyscript.py pr/
       - name: Upload generated artifact
         uses: actions/upload-artifact@v2
         with:
