@@ -48,6 +48,7 @@ jobs:
         id: pr_number
         run: echo '::set-output name=PR_NUMBER::'$(cat NR)
       - name: Send information message
+        if: ${{ github.event_name == 'workflow_run' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
