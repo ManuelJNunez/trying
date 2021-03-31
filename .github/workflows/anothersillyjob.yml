@@ -46,7 +46,7 @@ jobs:
       - name: Save PR number
         if: ${{ github.event_name == 'workflow_run' }}
         id: pr_number
-        run: run: echo '::set-output name=PR_NUMBER::$(cat NR)'
+        run: echo '::set-output name=PR_NUMBER::$(cat NR)'
       - uses: actions/checkout@v2
         if: ${{ github.event_name == 'push' }}
       - name: List files
