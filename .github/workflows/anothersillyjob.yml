@@ -53,10 +53,12 @@ jobs:
         run: ls -la
 
 
-  commentpr:
+  commentpr-success:
     runs-on: ubuntu-latest
     needs: upload
-    if: ${{ github.event_name == 'workflow_run' && needs.upload.result == 'success' }}
+    if: >
+      ${{ github.event_name == 'workflow_run' &&
+      needs.upload.result == 'success' }}
 
     steps:
       - name: 'Comment on PR'
@@ -73,4 +75,28 @@ jobs:
               repo: context.repo.repo,
               issue_number: issue_number,
               body: 'Everything is OK. Thank you for the PR!'
+            });
+
+  commentpr-fail:
+    runs-on: ubuntu-latest
+    needs: upload
+    if: >
+      ${{ github.event_name == 'workflow_run' &&
+      needs.upload.result == 'failure' }}
+
+    steps:
+      - name: 'Comment on PR'
+        uses: actions/github-script@v3
+        env:
+          ISSUE_NUMBER: ${{ needs.upload.outputs.pr_number }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var fs = require('fs');
+            var issue_number = Number(process.env['ISSUE_NUMBER']);
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: 'Oops, something went wrong!'
             });
