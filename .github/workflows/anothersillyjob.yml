@@ -41,6 +41,7 @@ jobs:
       - run: unzip pr.zip
         if: ${{ github.event_name == 'workflow_run' }}
       - uses: actions/checkout@v2
+        if: ${{ github.event_name == 'push' }}
       - name: List files
         run: ls -la
       - name: 'Comment on PR'
