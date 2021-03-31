@@ -47,11 +47,21 @@ jobs:
         if: ${{ github.event_name == 'workflow_run' }}
         id: pr_number
         run: echo '::set-output name=PR_NUMBER::'$(cat NR)
+      - name: Send information message
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            var issue_number = ${{ steps.pr_number.outputs.PR_NUMBER }};
+            await github.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: `The compilation is starting. Take a look [here](https://github.com/ManuelJNunez/trying/actions/runs${context.runId}).`
+            });
       - uses: actions/checkout@v2
         if: ${{ github.event_name == 'push' }}
       - name: List files
         run: ls -la
-
 
   commentpr-success:
     runs-on: ubuntu-latest
@@ -66,7 +76,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            var fs = require('fs');
             var issue_number = ${{ needs.upload.outputs.pr_number }};
             await github.issues.createComment({
               owner: context.repo.owner,
@@ -88,7 +97,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            var fs = require('fs');
             var issue_number = ${{ needs.upload.outputs.pr_number }};
             await github.issues.createComment({
               owner: context.repo.owner,
