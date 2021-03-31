@@ -16,6 +16,9 @@ jobs:
       ${{ (github.event.workflow_run.event == 'pull_request' &&
       github.event.workflow_run.conclusion == 'success') ||
       github.event_name == 'push' }}
+    outputs:
+      pr_number: ${{ steps.pr_number.outputs.PR_NUMBER }}
+
     steps:
       - name: 'Download artifact'
         if: ${{ github.event_name == 'workflow_run' }}
@@ -40,18 +43,32 @@ jobs:
             fs.writeFileSync('${{github.workspace}}/pr.zip', Buffer.from(download.data));
       - run: unzip pr.zip
         if: ${{ github.event_name == 'workflow_run' }}
+      - name: Save PR number
+        if: ${{ github.event_name == 'workflow_run' }}
+        id: pr_number
+        run: run: echo '::set-output name=PR_NUMBER::$(cat NR)'
       - uses: actions/checkout@v2
         if: ${{ github.event_name == 'push' }}
       - name: List files
         run: ls -la
+
+
+  commentpr:
+    runs-on: ubuntu-latest
+    needs: upload
+    if: ${{ needs.upload.result == 'success' }}
+
+    steps:
       - name: 'Comment on PR'
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/github-script@v3
+        env:
+          ISSUE_NUMBER: ${{ needs.upload.outputs.pr_number }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var fs = require('fs');
-            var issue_number = Number(fs.readFileSync('./NR'));
+            var issue_number = Number(process.env['ISSUE_NUMBER']);
             await github.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
