@@ -20,6 +20,8 @@ jobs:
       pr_number: ${{ steps.pr_number.outputs.PR_NUMBER }}
 
     steps:
+      - name: CMake version
+        run: cmake --version
       - name: 'Download artifact'
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/github-script@v3.1.0
