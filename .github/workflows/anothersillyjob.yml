@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   workflow_run:
     workflows: ["Silly workflow"]
     types:
@@ -21,7 +22,9 @@ jobs:
 
     steps:
       - name: CMake version
-        run: cmake --version
+        run: |
+          cmake --version
+          echo "antonio"
       - name: 'Download artifact'
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/github-script@v3.1.0
