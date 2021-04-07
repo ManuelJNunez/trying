@@ -67,10 +67,11 @@ jobs:
       - name: List files
         run: ls -la
 
-  commentpr-success:
+  commentpr:
     runs-on: ubuntu-latest
     needs: upload
-    if: ${{ github.event_name == 'workflow_run' && needs.upload.result == 'success' }}
+    name: Comment PR
+    if: ${{ github.event_name == 'workflow_run' }}
 
     steps:
       - name: 'Comment on PR'
@@ -80,31 +81,17 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            var message
+            if (${{ needs.build.result }} == 'success')
+              message = 'Everything is OK. Thank you for the PR!'
+            else
+              message = 'Oops, something went wrong!'
+          
             var issue_number = ${{ needs.upload.outputs.pr_number }};
             await github.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issue_number,
-              body: 'Everything is OK. Thank you for the PR!'
+              body: message,
             });
 
-  commentpr-fail:
-    runs-on: ubuntu-latest
-    needs: upload
-    if: ${{ github.event_name == 'workflow_run' && needs.upload.result == 'failure' }}
-
-    steps:
-      - name: 'Comment on PR'
-        uses: actions/github-script@v3
-        env:
-          ISSUE_NUMBER: ${{ needs.upload.outputs.pr_number }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            var issue_number = ${{ needs.upload.outputs.pr_number }};
-            await github.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue_number,
-              body: 'Oops, something went wrong!'
-            });
