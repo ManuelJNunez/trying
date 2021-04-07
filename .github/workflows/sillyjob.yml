@@ -2,8 +2,6 @@ name: Silly workflow
 
 on:  
   pull_request:
-    branches:
-      - main
 
 jobs:
   build:
