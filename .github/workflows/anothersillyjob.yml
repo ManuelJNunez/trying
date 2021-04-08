@@ -82,6 +82,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             var message;
+			console.log(${{ needs.build.result }});
             if ('${{ needs.build.result }}' == 'success')
               message = 'Everything is OK. Thank you for the PR!';
             else
