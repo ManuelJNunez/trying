@@ -81,11 +81,11 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            var message
-            if (${{ needs.build.result }} == 'success')
-              message = 'Everything is OK. Thank you for the PR!'
+            var message;
+            if ('${{ needs.build.result }}' == 'success')
+              message = 'Everything is OK. Thank you for the PR!';
             else
-              message = 'Oops, something went wrong!'
+              message = 'Oops, something went wrong!';
           
             var issue_number = ${{ needs.upload.outputs.pr_number }};
             await github.issues.createComment({
